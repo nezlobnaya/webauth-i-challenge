@@ -16,6 +16,7 @@ exports.up = function(knex) {
         .inTable('roles')
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
+        .defaultTo('1')
     })
 };
 
