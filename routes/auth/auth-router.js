@@ -9,6 +9,9 @@ router.post('/register', (req, res, next) => {
 
     Users.add(user)
     .then(saved => {
+        //create a session
+      //send back a cookie
+        req.session.user = user
         res.status(201).json(saved)
     })
     .catch(err => {
@@ -23,6 +26,9 @@ router.post('/login', (req, res, next) => {
     .first()
     .then(user => {
         if (user && bcrypt.compareSync(password, user.password)) {
+            req.session.user = user
+             //send back a cookie
+
             res.json({
                 message: `${user.username} logged in`
             })
@@ -36,5 +42,20 @@ router.post('/login', (req, res, next) => {
         next(err)
     })
 })
+
+router.get('/logout', (req, res) => {
+    if(req.session) {
+        req.session.destroy(err => {
+            if(err) {
+                res.json({
+                    message: `you can checkout but you can't never leave`
+                })
+            } else {
+                res.end()
+            }
+        })
+    }
+})
+
 
 module.exports = router
